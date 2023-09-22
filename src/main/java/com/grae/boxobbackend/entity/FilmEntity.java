@@ -28,7 +28,6 @@ public class FilmEntity {
     private Double rental_rate;
     private Date last_update;
 
-    @Getter(AccessLevel.NONE)
     private String special_features;
     public List<String> getSpecial_features() {
         return splitStringToList(special_features);
