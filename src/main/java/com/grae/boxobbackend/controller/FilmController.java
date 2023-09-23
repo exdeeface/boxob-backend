@@ -1,6 +1,5 @@
 package com.grae.boxobbackend.controller;
 
-import com.grae.boxobbackend.entity.ActorEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
 import com.grae.boxobbackend.repo.FilmRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,9 @@ public class FilmController {
     }
 
     @PostMapping("/films/add")
-    public @ResponseBody void addFilm(FilmEntity film) {
+
+    public @ResponseBody void addFilm(@RequestBody FilmEntity film) {
+        film.setLastUpdate();
         filmRepo.save(film);
     }
 }

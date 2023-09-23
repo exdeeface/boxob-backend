@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class FilmEntity {
     private String description;
     private Integer length;
     private Integer release_year;
-    public String rating;
+    private String rating;
     private Integer language_id;
     private Integer rental_duration;
     private Double rental_rate;
@@ -30,18 +31,29 @@ public class FilmEntity {
 
     private String special_features;
     public List<String> getSpecial_features() {
-        return splitStringToList(special_features);
+        if (special_features == null) {
+            return null;
+        } else {
+            return splitStringToList(special_features);
+        }
+
     }
 
-    //public List<String> getSpecialFeatures() { return splitStringToList(special_features); }
-
     public static List<String> splitStringToList(String input) {
-        List<String> resultList = new ArrayList<>();
-        String[] elements = input.split(",");
+        if (input.isEmpty() || input == null) {
+            return new ArrayList<>();
+        } else {
+            List<String> resultList = new ArrayList<>();
+            String[] elements = input.split(",");
 
-        for (String element : elements) { resultList.add(element.trim()); }
+            for (String element : elements) { resultList.add(element.trim()); }
 
-        return resultList;
+            return resultList;
+        }
+    }
+
+    public void setLastUpdate() {
+        this.last_update = Date.valueOf(LocalDate.now());
     }
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -71,4 +83,6 @@ public class FilmEntity {
     public Integer getFilmId() { return film_id; }
     public String getTitle() { return title; }
     public String getRating() { return rating; }
+    public String getDescription() { return description; }
+    public Integer getLanguageId() { return language_id; }
 }
