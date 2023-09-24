@@ -3,7 +3,6 @@ package com.grae.boxobbackend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,18 +35,14 @@ public class FilmEntity {
         } else {
             return splitStringToList(special_features);
         }
-
     }
 
     public static List<String> splitStringToList(String input) {
-        if (input.isEmpty() || input == null) {
-            return new ArrayList<>();
-        } else {
+        if (input.isEmpty() || input == null) { return new ArrayList<>(); }
+        else {
             List<String> resultList = new ArrayList<>();
             String[] elements = input.split(",");
-
             for (String element : elements) { resultList.add(element.trim()); }
-
             return resultList;
         }
     }
@@ -82,7 +77,18 @@ public class FilmEntity {
 
     public Integer getFilmId() { return film_id; }
     public String getTitle() { return title; }
+    public Integer getLength() {
+        return length;
+    }
     public String getRating() { return rating; }
     public String getDescription() { return description; }
     public Integer getLanguageId() { return language_id; }
+    public Integer getRelease_year() { return release_year; }
+
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setLength(Integer length) { this.length = length; }
+    public void setRelease_year(Integer release_year) { this.release_year = release_year; }
+    public void setRating(String rating) { this.rating = rating; }
+    public void setLanguage_id(Integer language_id) { this.language_id = language_id; }
 }
