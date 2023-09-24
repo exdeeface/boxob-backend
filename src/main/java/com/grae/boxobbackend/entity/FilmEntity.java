@@ -3,6 +3,7 @@ package com.grae.boxobbackend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,6 +28,19 @@ public class FilmEntity {
     private Integer rental_duration;
     private Double rental_rate;
     private Date last_update;
+
+    public FilmEntity(Integer film_id, String title, String description, Integer length, Integer release_year, String rating, Integer language_id, Integer rental_duration, Double rental_rate) {
+        this.film_id = film_id;
+        this.title = title;
+        this.description = description;
+        this.length = length;
+        this.release_year = release_year;
+        this.rating = rating;
+        this.language_id = language_id;
+        this.rental_duration = rental_duration;
+        this.rental_rate = rental_rate;
+        setLastUpdate();
+    }
 
     private String special_features;
     public List<String> getSpecial_features() {
