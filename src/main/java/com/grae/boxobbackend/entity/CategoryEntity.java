@@ -22,4 +22,8 @@ public class CategoryEntity {
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<FilmEntity> films;
+
+    public Integer getCategory_id() { return category_id; }
+    public String getName() { return name; }
+    public List<FilmEntity> getFilms() { return films; }
 }

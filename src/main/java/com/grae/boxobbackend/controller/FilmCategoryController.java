@@ -13,10 +13,23 @@ public class FilmCategoryController {
     @Autowired
     FilmCategoryRepo filmCategoryRepo;
 
-    @PutMapping("/film_category/add/")
+    @PostMapping("/film_category/add")
     public @ResponseBody void addFilmCategory(@RequestBody FilmCategoryEntity filmCategory) {
         filmCategory.setLastUpdate();
-        System.out.println("film_id: " +  filmCategory.getFilm_id() + " category_id: " + filmCategory.getCategory_id());
-        //filmCategoryRepo.save(filmCategory);
+        filmCategoryRepo.save(filmCategory);
+    }
+
+    @PutMapping("/film_category/update")
+    public @ResponseBody void updateFilmCategory(@RequestBody FilmCategoryEntity filmCategory) {
+        filmCategory.setLastUpdate();
+        System.out.println("fid: " + filmCategory.getFilm_id() + ", cid: " + filmCategory.getCategory_id());
+        if (filmCategoryRepo.findByFilmId(filmCategory.getFilm_id()) != null) {
+            FilmCategoryEntity fce = filmCategoryRepo.findByFilmId(filmCategory.getFilm_id());
+            System.out.println("film_id: " +  fce.getFilm_id() + " category_id: " + fce.getCategory_id());
+            filmCategoryRepo.delete(fce);
+            System.out.println("old deleted");
+        }
+        filmCategoryRepo.save(filmCategory);
+        System.out.println("new saved");
     }
 }

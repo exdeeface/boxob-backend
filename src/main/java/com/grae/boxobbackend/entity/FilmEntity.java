@@ -28,6 +28,7 @@ public class FilmEntity {
     private Integer rental_duration;
     private Double rental_rate;
     private Date last_update;
+    private String special_features;
 
     public FilmEntity(Integer film_id, String title, String description, Integer length, Integer release_year, String rating, Integer language_id, Integer rental_duration, Double rental_rate) {
         this.film_id = film_id;
@@ -39,33 +40,10 @@ public class FilmEntity {
         this.language_id = language_id;
         this.rental_duration = rental_duration;
         this.rental_rate = rental_rate;
-        setLastUpdate();
+        setLast_update();
     }
 
-    private String special_features;
-    public List<String> getSpecial_features() {
-        if (special_features == null) {
-            return null;
-        } else {
-            return splitStringToList(special_features);
-        }
-    }
-
-    public static List<String> splitStringToList(String input) {
-        if (input.isEmpty() || input == null) { return new ArrayList<>(); }
-        else {
-            List<String> resultList = new ArrayList<>();
-            String[] elements = input.split(",");
-            for (String element : elements) { resultList.add(element.trim()); }
-            return resultList;
-        }
-    }
-
-    public void setLastUpdate() {
-        this.last_update = Date.valueOf(LocalDate.now());
-    }
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonIgnoreProperties("films")
     @JoinTable(name = "film_category",
             joinColumns = {
@@ -89,6 +67,29 @@ public class FilmEntity {
     )
     private List<ActorEntity> actors;
 
+    public void setLast_update() {
+        this.last_update = Date.valueOf(LocalDate.now());
+    }
+
+    public List<String> getSpecial_features() {
+        if (special_features == null) {
+            return null;
+        } else {
+            return splitStringToList(special_features);
+        }
+    }
+
+    public static List<String> splitStringToList(String input) {
+        if (input.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            List<String> resultList = new ArrayList<>();
+            String[] elements = input.split(",");
+            for (String element : elements) { resultList.add(element.trim()); }
+            return resultList;
+        }
+    }
+
     public Integer getFilmId() { return film_id; }
     public String getTitle() { return title; }
     public Integer getLength() {
@@ -98,6 +99,8 @@ public class FilmEntity {
     public String getDescription() { return description; }
     public Integer getLanguageId() { return language_id; }
     public Integer getRelease_year() { return release_year; }
+    public List<CategoryEntity> getCategories() { return categories; }
+    public List<ActorEntity> getActors() { return actors; }
 
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
@@ -105,4 +108,6 @@ public class FilmEntity {
     public void setRelease_year(Integer release_year) { this.release_year = release_year; }
     public void setRating(String rating) { this.rating = rating; }
     public void setLanguage_id(Integer language_id) { this.language_id = language_id; }
+    public void setCategories(List<CategoryEntity> categories) { this.categories = categories; }
+    public void setActors(List<ActorEntity> actors) { this.actors = actors; }
 }

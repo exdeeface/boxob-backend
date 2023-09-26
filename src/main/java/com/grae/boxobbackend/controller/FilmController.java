@@ -1,6 +1,9 @@
 package com.grae.boxobbackend.controller;
 
+import com.grae.boxobbackend.beans.FilmCategoryId;
+import com.grae.boxobbackend.entity.FilmCategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
+import com.grae.boxobbackend.repo.FilmCategoryRepo;
 import com.grae.boxobbackend.repo.FilmRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class FilmController {
     @Autowired
     private FilmRepo filmRepo;
+    private FilmCategoryRepo filmCategoryRepo;
 
     @GetMapping("/films")
     public @ResponseBody Iterable<FilmEntity> getFilms() {
@@ -25,6 +29,10 @@ public class FilmController {
 
     @DeleteMapping("/films/delete/{film_id}")
     public @ResponseBody void deleteById(@PathVariable Integer film_id) {
+        filmRepo.deleteRelatedRentals(film_id);
+        filmRepo.deleteRelatedInventory(film_id);
+        filmRepo.deleteRelatedFilmActors(film_id);
+        filmRepo.deleteRelatedFilmCategory(film_id);
         filmRepo.deleteById(film_id);
     }
 
@@ -38,14 +46,26 @@ public class FilmController {
             original.setRelease_year(film.getRelease_year());
             original.setRating(film.getRating());
             original.setLanguage_id(film.getLanguageId());
-            film.setLastUpdate();
+            film.setLast_update();
             filmRepo.save(original);
         }
     }
 
     @PostMapping("/films/add")
     public @ResponseBody void addFilm(@RequestBody FilmEntity film) {
-        film.setLastUpdate();
+        film.setLast_update();
         filmRepo.save(film);
+
+        FilmCategoryId filmCategoryId = new FilmCategoryId();
+        System.out.println(film.getCategories().get(0).getCategory_id());
+
+        filmCategoryId.setFilm_id(film.getFilmId());
+        filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
+
+        FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
+        filmCategoryEntity.setFilmCategoryId(filmCategoryId);
+        filmCategoryEntity.setLastUpdate();
+        try { filmCategoryRepo.save(filmCategoryEntity); }
+        catch (NullPointerException ignored) { }
     }
 }

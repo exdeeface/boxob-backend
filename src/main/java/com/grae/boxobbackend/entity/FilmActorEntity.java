@@ -1,5 +1,6 @@
 package com.grae.boxobbackend.entity;
 
+import com.grae.boxobbackend.beans.FilmActorId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,16 +16,15 @@ import java.time.LocalDate;
 @Table(name="film_actor")
 @Entity
 public class FilmActorEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Integer film_id;
-    private Integer actor_id;
+    @EmbeddedId
+    FilmActorId filmActorId;
     private Date last_update;
 
     public void setLastUpdate() {
         this.last_update = Date.valueOf(LocalDate.now());
     }
 
-    public Integer getFilm_id() { return film_id; }
-    public Integer getActor_id() { return actor_id; }
+    public FilmActorId getId() {return filmActorId;}
+    public Integer getFilm_id() { return filmActorId.getFilm_id(); }
+    public Integer getActor_id() { return filmActorId.getActor_id(); }
 }

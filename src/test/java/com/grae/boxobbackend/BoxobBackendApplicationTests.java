@@ -1,6 +1,8 @@
 package com.grae.boxobbackend;
 
+import com.grae.boxobbackend.controller.ActorController;
 import com.grae.boxobbackend.controller.FilmController;
+import com.grae.boxobbackend.entity.ActorEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +35,9 @@ class BoxobBackendApplicationTests {
 	@MockBean
 	FilmController filmController;
 
+	@MockBean
+	ActorController actorController;
+
 	@Test
 	void testGetFilms() throws Exception {
 		FilmEntity film0 = new FilmEntity(1, "ACADEMY DINOSAUR", "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", 86, 2006,"PG", 1, 6, 0.99);
@@ -49,4 +55,48 @@ class BoxobBackendApplicationTests {
 			.andExpect(jsonPath("$", hasSize(3)));
 	}
 
+	@Test
+	void testDeleteFilm() throws Exception {
+		FilmEntity film0 = new FilmEntity(1, "ACADEMY DINOSAUR", "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", 86, 2006,"PG", 1, 6, 0.99);
+		FilmEntity film1 = new FilmEntity(500, "KISS GLORY", "A Lacklusture Reflection of a Girl And a Husband who must Find a Robot in The Canadian Rockies", 163, 2006,"PG-13", 1, 5, 4.99);
+		FilmEntity film2 = new FilmEntity(1000, "ZORRO ARK", "A Intrepid Panorama of a Mad Scientist And a Boy who must Redeem a Boy in A Monastery", 50, 2008,"NC-17", 1, 3, 4.99);
+
+		List<FilmEntity> films = Arrays.asList(film0, film1, film2);
+		when(filmController.getFilms()).thenReturn(films);
+
+		mvc.perform(delete("/films/delete/" + film2.getFilmId())
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(200));
+
+		when(filmController.getFilms()).thenReturn(films);
+	}
+
+	@Test
+	void getAllActors() throws Exception {
+		ActorEntity actor0 = new ActorEntity(15, "CUBA", "OLIVIER");
+		ActorEntity actor1 = new ActorEntity(17, "HELEN", "VOIGHT");
+		ActorEntity actor2 = new ActorEntity(27, "JULIA", "MCQUEEN");
+
+		actor0.setFirst_name("CUBA");
+		actor0.setLast_name("OLIVER");
+		actor0.setLast_update();
+
+		List<ActorEntity> actors = Arrays.asList(actor0, actor1, actor2);
+		when(actorController.getActors()).thenReturn(actors);
+
+		mvc.perform(get("/actors")
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[0].actor_id").value(actor0.getActor_id()))
+				.andExpect(jsonPath("$[1].actor_id").value(actor1.getActor_id()))
+				.andExpect(jsonPath("$[2].actor_id").value(actor2.getActor_id()))
+				.andExpect(jsonPath("$", hasSize(3)));
+	}
+
+	@Test
+	void testFilmSpecialFeatures() throws Exception {
+		List<String> features = FilmEntity.splitStringToList("Trailers,Commenataries,Behind the scenes");
+		assertEquals(features.get(0), "Trailers");
+		assertEquals(features.get(1), "Commenataries");
+		assertEquals(features.get(2), "Behind the scenes");
+	}
 }
