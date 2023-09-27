@@ -30,7 +30,10 @@ public class FilmEntity {
     private Date last_update;
     private String special_features;
 
-    public FilmEntity(Integer film_id, String title, String description, Integer length, Integer release_year, String rating, Integer language_id, Integer rental_duration, Double rental_rate) {
+    public FilmEntity(Integer film_id, String title, String description,
+                      Integer length, Integer release_year, String rating,
+                      Integer language_id, Integer rental_duration,
+                      Double rental_rate) {
         this.film_id = film_id;
         this.title = title;
         this.description = description;

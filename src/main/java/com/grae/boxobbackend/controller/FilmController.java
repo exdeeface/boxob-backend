@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class FilmController {
     @Autowired
     private FilmRepo filmRepo;
+    @Autowired
     private FilmCategoryRepo filmCategoryRepo;
 
     @GetMapping("/films")
@@ -65,7 +66,6 @@ public class FilmController {
         FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
         filmCategoryEntity.setFilmCategoryId(filmCategoryId);
         filmCategoryEntity.setLastUpdate();
-        try { filmCategoryRepo.save(filmCategoryEntity); }
-        catch (NullPointerException ignored) { }
+        filmCategoryRepo.save(filmCategoryEntity);
     }
 }
