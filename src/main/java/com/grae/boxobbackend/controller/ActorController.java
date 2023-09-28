@@ -4,9 +4,7 @@ import com.grae.boxobbackend.entity.ActorEntity;
 import com.grae.boxobbackend.repo.ActorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Controller
@@ -17,5 +15,10 @@ public class ActorController {
     @GetMapping("/actors")
     public @ResponseBody Iterable<ActorEntity> getActors() {
         return actorRepo.findAll();
+    }
+
+    @PostMapping("/actors/add")
+    public @ResponseBody void addActor(@RequestBody ActorEntity actor) {
+        actorRepo.save(actor);
     }
 }

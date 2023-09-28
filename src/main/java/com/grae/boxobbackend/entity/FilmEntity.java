@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,6 +29,7 @@ public class FilmEntity {
     private Integer rental_duration;
     private Double rental_rate;
     private Date last_update;
+    private Double replacement_cost;
     private String special_features;
 
     public FilmEntity(Integer film_id, String title, String description,
@@ -42,6 +44,7 @@ public class FilmEntity {
         this.language_id = language_id;
         this.rental_duration = 0;
         this.rental_rate = 0d;
+        this.replacement_cost = 0d;
         setLast_update();
     }
 
@@ -68,10 +71,6 @@ public class FilmEntity {
             }
     )
     private List<ActorEntity> actors;
-
-    public void setLast_update() {
-        this.last_update = Date.valueOf(LocalDate.now());
-    }
 
     public List<String> getSpecial_features() {
         if (special_features == null) {
@@ -116,9 +115,7 @@ public class FilmEntity {
 
     public Integer getFilmId() { return film_id; }
     public String getTitle() { return title; }
-    public Integer getLength() {
-        return length;
-    }
+    public Integer getLength() { return length; }
     public String getRating() { return rating; }
     public String getDescription() { return correctDescription(description); }
     public Integer getLanguageId() { return language_id; }
@@ -134,4 +131,13 @@ public class FilmEntity {
     public void setLanguage_id(Integer language_id) { this.language_id = language_id; }
     public void setCategories(List<CategoryEntity> categories) { this.categories = categories; }
     public void setActors(List<ActorEntity> actors) { this.actors = actors; }
+    public void setRental_duration(Integer rental_duration) { this.rental_duration = rental_duration; }
+    public void setRental_rate(Double rental_rate) { this.rental_rate = rental_rate; }
+    public void setReplacement_cost(Double replacement_cost) { this.replacement_cost = replacement_cost; }
+    public void setLast_update() {
+        this.last_update = Date.valueOf(LocalDate.now());
+    }
+    public void setSpecial_features(List<String> special_features) {
+        this.special_features = String.join(",", special_features);
+    }
 }

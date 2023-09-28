@@ -23,6 +23,11 @@ public class CategoryEntity {
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<FilmEntity> films;
 
+    public CategoryEntity(Integer category_id, String name) {
+        this.category_id = category_id;
+        this.name = name;
+    }
+
     public Integer getCategory_id() { return category_id; }
     public String getName() { return name; }
     public List<FilmEntity> getFilms() { return films; }

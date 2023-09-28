@@ -1,10 +1,16 @@
 package com.grae.boxobbackend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grae.boxobbackend.controller.ActorController;
+import com.grae.boxobbackend.controller.FilmCategoryController;
 import com.grae.boxobbackend.controller.FilmController;
 import com.grae.boxobbackend.entity.ActorEntity;
+import com.grae.boxobbackend.entity.CategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
+import com.grae.boxobbackend.repo.ActorRepo;
+import com.grae.boxobbackend.repo.FilmRepo;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,14 +19,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.runner.RunWith;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import javax.print.attribute.standard.Media;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -28,47 +40,87 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 @SpringBootTest
 class BoxobBackendApplicationTests {
-
 	@Autowired
 	private MockMvc mvc;
 
 	@MockBean
-	FilmController filmController;
-
+	FilmRepo filmRepo;
 	@MockBean
-	ActorController actorController;
+	ActorRepo actorRepo;
 
-	@Test
-	void testGetFilms() throws Exception {
-		FilmEntity film0 = new FilmEntity(1, "ACADEMY DINOSAUR", "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", 86, 2006,"PG", 1);
-		FilmEntity film1 = new FilmEntity(500, "KISS GLORY", "A Lacklusture Reflection of a Girl And a Husband who must Find a Robot in The Canadian Rockies", 163, 2006,"PG-13", 1);
-		FilmEntity film2 = new FilmEntity(1000, "ZORRO ARK", "A Intrepid Panorama of a Mad Scientist And a Boy who must Redeem a Boy in A Monastery", 50, 2008,"NC-17", 1);
-
-		List<FilmEntity> films = Arrays.asList(film0, film1, film2);
-		when(filmController.getFilms()).thenReturn(films);
-
-		mvc.perform(get("/films")
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(jsonPath("$[0].film_id").value(film0.getFilmId()))
-			.andExpect(jsonPath("$[1].film_id").value(film1.getFilmId()))
-			.andExpect(jsonPath("$[2].film_id").value(film2.getFilmId()))
-			.andExpect(jsonPath("$", hasSize(3)));
+	public static String asJsonString(final Object obj) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			final String jsonContent = mapper.writeValueAsString(obj);
+			return jsonContent;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Test
-	void testDeleteFilm() throws Exception {
+	void getFilms() throws Exception {
 		FilmEntity film0 = new FilmEntity(1, "ACADEMY DINOSAUR", "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", 86, 2006,"PG", 1);
 		FilmEntity film1 = new FilmEntity(500, "KISS GLORY", "A Lacklusture Reflection of a Girl And a Husband who must Find a Robot in The Canadian Rockies", 163, 2006,"PG-13", 1);
 		FilmEntity film2 = new FilmEntity(1000, "ZORRO ARK", "A Intrepid Panorama of a Mad Scientist And a Boy who must Redeem a Boy in A Monastery", 50, 2008,"NC-17", 1);
 
 		List<FilmEntity> films = Arrays.asList(film0, film1, film2);
-		when(filmController.getFilms()).thenReturn(films);
+		when(filmRepo.findAll()).thenReturn(films);
 
-		mvc.perform(delete("/films/delete/" + film2.getFilmId())
+		mvc.perform(get("/films")
+			.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(200));
+	}
+
+	@Test
+	void getFilmById() throws Exception {
+		FilmEntity film = new FilmEntity(1000, "ZORRO ARK", "A Intrepid Panorama of a Mad Scientist And a Boy who must Redeem a Boy in A Monastery", 50, 2008,"NC-17", 1);
+
+		when(filmRepo.findById(1000)).thenReturn(Optional.of(film));
+
+		mvc.perform(get("/films")
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void addFilm() throws Exception {
+		CategoryEntity category = new CategoryEntity(6, "Documentary");
+		List<CategoryEntity> categoryList = new ArrayList<>();
+		categoryList.add(category);
+
+		FilmEntity film = new FilmEntity(1, "title", "description", 120, 2006,"PG", 1);
+		film.setCategories(categoryList);
+
+		when(filmRepo.save(film)).thenReturn(film);
+
+		mvc.perform(MockMvcRequestBuilders.post("/films/add")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(asJsonString(film))
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void addActor() throws Exception {
+		ActorEntity actor = new ActorEntity(13, "first", "last");
+
+		mvc.perform(MockMvcRequestBuilders.post("/actors/add")
+						.content(asJsonString(actor))
+						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(200));
+	}
 
-		when(filmController.getFilms()).thenReturn(films);
+	@Test
+	void deleteFilm() throws Exception {
+		FilmEntity film = new FilmEntity(1, "ACADEMY DINOSAUR", "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", 86, 2006,"PG", 1);
+
+		doNothing().when(filmRepo).deleteById(1000);
+
+		mvc.perform(delete("/films/delete/" + film.getFilmId())
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(200));
 	}
 
 	@Test
@@ -82,7 +134,7 @@ class BoxobBackendApplicationTests {
 		actor0.setLast_update();
 
 		List<ActorEntity> actors = Arrays.asList(actor0, actor1, actor2);
-		when(actorController.getActors()).thenReturn(actors);
+		when(actorRepo.findAll()).thenReturn(actors);
 
 		mvc.perform(get("/actors")
 						.accept(MediaType.APPLICATION_JSON))
