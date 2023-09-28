@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@SpringBootTest
 class BoxobBackendApplicationTests {
 	@Autowired
 	private MockMvc mvc;
