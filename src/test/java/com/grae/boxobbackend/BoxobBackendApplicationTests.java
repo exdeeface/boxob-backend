@@ -42,9 +42,61 @@ class BoxobBackendApplicationTests {
 	@MockBean
 	ActorRepo actorRepo;
 
+	public static String asJsonString(final Object obj) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			final String jsonContent = mapper.writeValueAsString(obj);
+			return jsonContent;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Test
+	void addActor() throws Exception {
+		ActorEntity actor = new ActorEntity(13, "first", "last");
+
+		when(actorRepo.save(actor)).thenReturn(actor);
+
+		mvc.perform(MockMvcRequestBuilders.post("/actors/add")
+						.content(asJsonString(actor))
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(200));
+	}
+
+	@Test
+	void getAllActors() throws Exception {
+		ActorEntity actor0 = new ActorEntity(15, "CUBA", "OLIVIER");
+		ActorEntity actor1 = new ActorEntity(17, "HELEN", "VOIGHT");
+		ActorEntity actor2 = new ActorEntity(27, "JULIA", "MCQUEEN");
+
+		actor0.setFirst_name("CUBA");
+		actor0.setLast_name("OLIVER");
+		actor0.setLast_update();
+
+		List<ActorEntity> actors = Arrays.asList(actor0, actor1, actor2);
+		when(actorRepo.findAll()).thenReturn(actors);
+
+		mvc.perform(get("/actors")
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[0].actor_id").value(actor0.getActor_id()))
+				.andExpect(jsonPath("$[1].actor_id").value(actor1.getActor_id()))
+				.andExpect(jsonPath("$[2].actor_id").value(actor2.getActor_id()))
+				.andExpect(jsonPath("$", hasSize(3)));
+	}
+
 	@Test
 	void testFilmDescription() {
 		String description = "A Astounding Action of a Astronaut and a Arbiter who must Search a Awesome Castle in South Australia";
 		assertEquals("An Astounding Action of an Astronaut and an Arbiter who must Search an Awesome Castle in South Australia", FilmEntity.correctDescription(description));
+	}
+
+	@Test
+	void testFilmSpecialFeatures() {
+		List<String> features = FilmEntity.splitStringToList("Trailers,Commenataries,Behind the scenes");
+		assertEquals("Trailers", features.get(0));
+		assertEquals("Commenataries", features.get(1));
+		assertEquals("Behind the scenes", features.get(2));
 	}
 }
