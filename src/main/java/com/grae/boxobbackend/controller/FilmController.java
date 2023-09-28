@@ -58,10 +58,7 @@ public class FilmController {
         film.setLast_update();
         filmRepo.save(film);
 
-        FilmCategoryId filmCategoryId = new FilmCategoryId();
-
-        filmCategoryId.setFilm_id(film.getFilmId());
-        filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
+        FilmCategoryId filmCategoryId = new FilmCategoryId(film.getFilmId(), film.getCategories().get(0).getCategory_id());
 
         FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
         filmCategoryEntity.setFilmCategoryId(filmCategoryId);

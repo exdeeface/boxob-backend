@@ -10,6 +10,11 @@ public class FilmCategoryId implements Serializable {
     private Integer film_id;
     private Integer category_id;
 
+    public FilmCategoryId(Integer film_id, Integer category_id) {
+        this.film_id = film_id;
+        this.category_id = category_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
