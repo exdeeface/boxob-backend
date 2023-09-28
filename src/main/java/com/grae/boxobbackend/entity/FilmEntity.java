@@ -32,8 +32,7 @@ public class FilmEntity {
 
     public FilmEntity(Integer film_id, String title, String description,
                       Integer length, Integer release_year, String rating,
-                      Integer language_id, Integer rental_duration,
-                      Double rental_rate) {
+                      Integer language_id) {
         this.film_id = film_id;
         this.title = title;
         this.description = description;
@@ -41,8 +40,8 @@ public class FilmEntity {
         this.release_year = release_year;
         this.rating = rating;
         this.language_id = language_id;
-        this.rental_duration = rental_duration;
-        this.rental_rate = rental_rate;
+        this.rental_duration = 0;
+        this.rental_rate = 0d;
         setLast_update();
     }
 
@@ -94,17 +93,26 @@ public class FilmEntity {
     }
 
     public static String correctDescription(String description) {
-        char[] vowels = {'a', 'A', 'e', 'E', 'i', 'I','o', 'O', 'u', 'U'};
-        for (char x : vowels) {
-            if (description.charAt(1) == ' ' && (description.charAt(0) == 'A' || description.charAt(0) == 'a')) {
-                if (description.charAt(2) == x) {
-                    StringBuilder sb = new StringBuilder(description);
-                    sb.insert(1, 'n');
-                    return sb.toString();
+        String[] words = description.split("\\W+");
+        char[] vowels = {'a', 'e', 'i','o', 'u'};
+
+        for (int i = 0; i < words.length; i++) {
+            if ((words[i].charAt(0) == 'A' || words[i].charAt(0) == 'a') && words[i].length() == 1) {
+                for (char vowel : vowels) {
+                    if (words[i+1].charAt(0) == vowel || words[i+1].charAt(0) == Character.toUpperCase(vowel)) {
+                        words[i]+='n';
+                    }
                 }
             }
         }
-        return description;
+
+        String newDesc = "";
+        for (int i = 0; i < words.length; i++) {
+            newDesc += words[i];
+            if (i < words.length-1) { newDesc += " "; }
+        }
+
+        return newDesc;
     }
 
     public Integer getFilmId() { return film_id; }
