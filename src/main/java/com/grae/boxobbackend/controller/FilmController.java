@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = {"https://main.dctonckhkul2a.amplifyapp.com", "localhost:3000"})
+@CrossOrigin(origins = {"https://main.dctonckhkul2a.amplifyapp.com", "http://localhost:3000"})
 @RestController
 @Controller
 public class FilmController {
