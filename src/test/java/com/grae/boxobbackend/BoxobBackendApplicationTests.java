@@ -93,7 +93,7 @@ class BoxobBackendApplicationTests {
 	}
 
 	@Test
-	void testFilmSpecialFeatures() throws Exception {
+	void testFilmSpecialFeatures() {
 		List<String> features = FilmEntity.splitStringToList("Trailers,Commenataries,Behind the scenes");
 		assertEquals("Trailers", features.get(0));
 		assertEquals("Commenataries", features.get(1));
@@ -103,7 +103,6 @@ class BoxobBackendApplicationTests {
 	@Test
 	void testFilmDescription() {
 		String description = "A Astounding Action of a Astronaut and a Arbiter who must Search a Awesome Castle in South Australia";
-		String fixed = "An Astounding Action of an Astronaut and an Arbiter who must Search an Awesome Castle in South Australia";
-		assertEquals(fixed, FilmEntity.correctDescription(description));
+		assertEquals("An Astounding Action of an Astronaut and an Arbiter who must Search an Awesome Castle in South Australia", FilmEntity.correctDescription(description));
 	}
 }

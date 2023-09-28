@@ -97,22 +97,21 @@ public class FilmEntity {
         char[] vowels = {'a', 'e', 'i','o', 'u'};
 
         for (int i = 0; i < words.length; i++) {
-            if ((words[i].charAt(0) == 'A' || words[i].charAt(0) == 'a') && words[i].length() == 1) {
-                for (char vowel : vowels) {
-                    if (words[i+1].charAt(0) == vowel || words[i+1].charAt(0) == Character.toUpperCase(vowel)) {
-                        words[i]+='n';
-                    }
+            for (char vowel : vowels) {
+                if ((words[i].charAt(0) == 'A' || words[i].charAt(0) == 'a') && words[i].length() == 1
+                        && (words[i+1].charAt(0) == vowel || words[i+1].charAt(0) == Character.toUpperCase(vowel))) {
+                    words[i]+='n';
                 }
             }
         }
 
-        String newDesc = "";
+        StringBuilder newDesc = new StringBuilder();
         for (int i = 0; i < words.length; i++) {
-            newDesc += words[i];
-            if (i < words.length-1) { newDesc += " "; }
+            newDesc.append(words[i]);
+            if (i < words.length-1) { newDesc.append(" "); }
         }
 
-        return newDesc;
+        return newDesc.toString();
     }
 
     public Integer getFilmId() { return film_id; }
