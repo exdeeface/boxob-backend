@@ -39,8 +39,7 @@ class FilmControllerTests {
     public static String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            return jsonContent;
+            return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -72,6 +71,31 @@ class FilmControllerTests {
         mvc.perform(post("/film_category/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(filmCategory))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateFilm() throws Exception  {
+        CategoryEntity categoryOriginal = new CategoryEntity(6, "Documentary");
+        List<CategoryEntity> categoryListOriginal = new ArrayList<>();
+        categoryListOriginal.add(categoryOriginal);
+
+        FilmEntity filmOriginal = new FilmEntity(1, "title", "description", 120, 2006,"PG", 1);
+        filmOriginal.setCategories(categoryListOriginal);
+
+        CategoryEntity categoryNew = new CategoryEntity(6, "Documentary");
+        List<CategoryEntity> categoryListNew = new ArrayList<>();
+        categoryListNew.add(categoryNew);
+
+        FilmEntity filmNew = new FilmEntity(1, " new title", "new description", 90, 2008,"NC-17", 3);
+        filmNew.setCategories(categoryListNew);
+
+        when(filmRepo.save(filmOriginal)).thenReturn(filmNew);
+
+        mvc.perform(put("/films/update/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(filmNew))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
