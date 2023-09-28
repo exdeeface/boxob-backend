@@ -22,10 +22,8 @@ public class FilmCategoryController {
     @PutMapping("/film_category/update")
     public @ResponseBody void updateFilmCategory(@RequestBody FilmCategoryEntity filmCategory) {
         filmCategory.setLastUpdate();
-        if (filmCategoryRepo.findByFilmId(filmCategory.getFilm_id()) != null) {
-            FilmCategoryEntity fce = filmCategoryRepo.findByFilmId(filmCategory.getFilm_id());
-            filmCategoryRepo.delete(fce);
-        }
+        FilmCategoryEntity fce = filmCategoryRepo.findByFilmId(filmCategory.getFilm_id());
+        filmCategoryRepo.delete(fce);
         filmCategoryRepo.save(filmCategory);
     }
 }
