@@ -84,18 +84,32 @@ class FilmControllerTests {
         FilmEntity filmOriginal = new FilmEntity(1, "title", "description", 120, 2006,"PG", 1);
         filmOriginal.setCategories(categoryListOriginal);
 
-        CategoryEntity categoryNew = new CategoryEntity(6, "Documentary");
+        FilmCategoryEntity filmCategoryOriginal = new FilmCategoryEntity();
+        filmCategoryOriginal.setFilmCategoryId(new FilmCategoryId(1, 6));
+
+        CategoryEntity categoryNew = new CategoryEntity(11, "Horror");
         List<CategoryEntity> categoryListNew = new ArrayList<>();
         categoryListNew.add(categoryNew);
 
         FilmEntity filmNew = new FilmEntity(1, " new title", "new description", 90, 2008,"NC-17", 3);
         filmNew.setCategories(categoryListNew);
 
+        FilmCategoryEntity filmCategoryNew = new FilmCategoryEntity();
+        filmCategoryNew.setFilmCategoryId(new FilmCategoryId(1,11));
+
         when(filmRepo.save(filmOriginal)).thenReturn(filmNew);
 
         mvc.perform(put("/films/update/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(filmNew))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        when(filmCategoryRepo.save(filmCategoryOriginal)).thenReturn(filmCategoryNew);
+
+        mvc.perform(put("/film_category/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(filmCategoryOriginal))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -112,11 +126,6 @@ class FilmControllerTests {
         mvc.perform(get("/films")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200));
-    }
-
-    @Test
-    void updateFilms() throws Exception {
-
     }
 
     @Test
