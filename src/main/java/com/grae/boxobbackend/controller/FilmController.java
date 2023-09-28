@@ -58,7 +58,6 @@ public class FilmController {
         filmRepo.save(film);
 
         FilmCategoryId filmCategoryId = new FilmCategoryId();
-        System.out.println(film.getCategories().get(0).getCategory_id());
 
         filmCategoryId.setFilm_id(film.getFilmId());
         filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());

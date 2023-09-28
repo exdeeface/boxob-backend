@@ -1,6 +1,5 @@
 package com.grae.boxobbackend.beans;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
@@ -10,8 +9,6 @@ import java.util.Objects;
 public class FilmCategoryId implements Serializable {
     private Integer film_id;
     private Integer category_id;
-
-
 
     @Override
     public boolean equals(Object o) {

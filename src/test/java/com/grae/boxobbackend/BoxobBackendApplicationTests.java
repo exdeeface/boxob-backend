@@ -95,8 +95,14 @@ class BoxobBackendApplicationTests {
 	@Test
 	void testFilmSpecialFeatures() throws Exception {
 		List<String> features = FilmEntity.splitStringToList("Trailers,Commenataries,Behind the scenes");
-		assertEquals(features.get(0), "Trailers");
-		assertEquals(features.get(1), "Commenataries");
-		assertEquals(features.get(2), "Behind the scenes");
+		assertEquals("Trailers", features.get(0));
+		assertEquals("Commenataries", features.get(1));
+		assertEquals("Behind the scenes", features.get(2));
+	}
+
+	@Test
+	void testFilmDescription() {
+		String description = "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies";
+		FilmEntity.correctDescription(description);
 	}
 }

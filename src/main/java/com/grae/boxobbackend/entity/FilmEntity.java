@@ -76,7 +76,7 @@ public class FilmEntity {
 
     public List<String> getSpecial_features() {
         if (special_features == null) {
-            return null;
+            return new ArrayList<>();
         } else {
             return splitStringToList(special_features);
         }
@@ -93,13 +93,27 @@ public class FilmEntity {
         }
     }
 
+    public static String correctDescription(String description) {
+        char[] vowels = {'a', 'A', 'e', 'E', 'i', 'I','o', 'O', 'u', 'U'};
+        for (char x : vowels) {
+            if (description.charAt(1) == ' ' && (description.charAt(0) == 'A' || description.charAt(0) == 'a')) {
+                if (description.charAt(2) == x) {
+                    StringBuilder sb = new StringBuilder(description);
+                    sb.insert(1, 'n');
+                    return sb.toString();
+                }
+            }
+        }
+        return description;
+    }
+
     public Integer getFilmId() { return film_id; }
     public String getTitle() { return title; }
     public Integer getLength() {
         return length;
     }
     public String getRating() { return rating; }
-    public String getDescription() { return description; }
+    public String getDescription() { return correctDescription(description); }
     public Integer getLanguageId() { return language_id; }
     public Integer getRelease_year() { return release_year; }
     public List<CategoryEntity> getCategories() { return categories; }
