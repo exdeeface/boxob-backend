@@ -76,7 +76,7 @@ class BoxobBackendApplicationTests {
 
 		when(filmRepo.save(film)).thenReturn(film);
 
-		mvc.perform(MockMvcRequestBuilders.post("/films/add")
+		mvc.perform(post("/films/add")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(asJsonString(film))
 						.accept(MediaType.APPLICATION_JSON))
