@@ -66,6 +66,24 @@ class BoxobBackendApplicationTests {
 	}
 
 	@Test
+	void addFilm() throws Exception {
+		CategoryEntity category = new CategoryEntity(6, "Documentary");
+		List<CategoryEntity> categoryList = new ArrayList<>();
+		categoryList.add(category);
+
+		FilmEntity film = new FilmEntity(1, "title", "description", 120, 2006,"PG", 1);
+		film.setCategories(categoryList);
+
+		when(filmRepo.save(film)).thenReturn(film);
+
+		mvc.perform(MockMvcRequestBuilders.post("/films/add")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(asJsonString(film))
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
 	void getAllActors() throws Exception {
 		ActorEntity actor0 = new ActorEntity(15, "CUBA", "OLIVIER");
 		ActorEntity actor1 = new ActorEntity(17, "HELEN", "VOIGHT");
