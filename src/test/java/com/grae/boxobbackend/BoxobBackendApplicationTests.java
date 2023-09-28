@@ -1,16 +1,12 @@
 package com.grae.boxobbackend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grae.boxobbackend.controller.ActorController;
-import com.grae.boxobbackend.controller.FilmCategoryController;
-import com.grae.boxobbackend.controller.FilmController;
 import com.grae.boxobbackend.entity.ActorEntity;
 import com.grae.boxobbackend.entity.CategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
 import com.grae.boxobbackend.repo.ActorRepo;
 import com.grae.boxobbackend.repo.FilmRepo;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.runner.RunWith;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import javax.print.attribute.standard.Media;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +32,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest
 class BoxobBackendApplicationTests {
 	@Autowired
 	private MockMvc mvc;
@@ -104,6 +97,8 @@ class BoxobBackendApplicationTests {
 	@Test
 	void addActor() throws Exception {
 		ActorEntity actor = new ActorEntity(13, "first", "last");
+
+		when(actorRepo.save(actor)).thenReturn(actor);
 
 		mvc.perform(MockMvcRequestBuilders.post("/actors/add")
 						.content(asJsonString(actor))
