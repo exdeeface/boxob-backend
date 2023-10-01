@@ -1,6 +1,7 @@
 package com.grae.boxobbackend.controller;
 
 import com.grae.boxobbackend.beans.FilmCategoryId;
+import com.grae.boxobbackend.entity.CategoryEntity;
 import com.grae.boxobbackend.entity.FilmCategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
 import com.grae.boxobbackend.repo.FilmCategoryRepo;
@@ -50,6 +51,15 @@ public class FilmController {
             original.setLanguage_id(film.getLanguageId());
             film.setLast_update();
             filmRepo.save(original);
+            FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
+            FilmCategoryId filmCategoryId = new FilmCategoryId();
+            filmCategoryId.setFilm_id(film.getFilmId());
+            filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
+            filmCategoryEntity.setFilmCategoryId(filmCategoryId);
+            filmCategoryEntity.setLastUpdate();
+            FilmCategoryEntity deleteMe = filmCategoryRepo.findByFilmId(film.getFilmId());
+            filmCategoryRepo.delete(deleteMe);
+            filmCategoryRepo.save(filmCategoryEntity);
         }
     }
 
@@ -58,7 +68,9 @@ public class FilmController {
         film.setLast_update();
         filmRepo.save(film);
 
-        FilmCategoryId filmCategoryId = new FilmCategoryId(film.getFilmId(), film.getCategories().get(0).getCategory_id());
+        FilmCategoryId filmCategoryId = new FilmCategoryId();
+        filmCategoryId.setFilm_id(film.getFilmId());
+        filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
 
         FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
         filmCategoryEntity.setFilmCategoryId(filmCategoryId);
