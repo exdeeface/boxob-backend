@@ -72,17 +72,13 @@ public class FilmEntity {
     private List<ActorEntity> actors;
 
     public List<String> getSpecial_features() {
-        if (special_features == null) {
-            return new ArrayList<>();
-        } else {
-            return splitStringToList(special_features);
-        }
+        if (special_features == null) { return new ArrayList<>(); }
+        else { return splitStringToList(special_features); }
     }
 
     public static List<String> splitStringToList(String input) {
-        if (input.isEmpty()) {
-            return new ArrayList<>();
-        } else {
+        if (input.isEmpty()) { return new ArrayList<>(); }
+        else {
             List<String> resultList = new ArrayList<>();
             String[] elements = input.split(",");
             for (String element : elements) { resultList.add(element.trim()); }

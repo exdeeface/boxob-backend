@@ -63,6 +63,8 @@ public class FilmController {
 
             filmCategoryRepo.delete(deleteMe);
             filmCategoryRepo.save(filmCategoryEntity);
+        } else {
+            throw new NullPointerException("No record found");
         }
     }
 

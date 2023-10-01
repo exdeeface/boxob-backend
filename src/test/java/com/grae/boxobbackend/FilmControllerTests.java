@@ -193,7 +193,7 @@ class FilmControllerTests {
     @Test
     void testActorEntity() {
         ActorEntity actor = new ActorEntity();
-        actor.setLast_name("first");
+        actor.setFirst_name("first");
         actor.setLast_name("last");
         actor.setActor_id(2023);
         actor.setLast_update();
