@@ -1,7 +1,6 @@
 package com.grae.boxobbackend.controller;
 
 import com.grae.boxobbackend.entity.FilmCategoryEntity;
-import com.grae.boxobbackend.entity.FilmEntity;
 import com.grae.boxobbackend.repo.FilmCategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
