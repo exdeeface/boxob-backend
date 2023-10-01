@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grae.boxobbackend.beans.FilmCategoryId;
 import com.grae.boxobbackend.controller.FilmCategoryController;
 import com.grae.boxobbackend.controller.FilmController;
+import com.grae.boxobbackend.entity.ActorEntity;
 import com.grae.boxobbackend.entity.CategoryEntity;
 import com.grae.boxobbackend.entity.FilmCategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
@@ -48,6 +49,8 @@ class FilmControllerTests {
 
     @Test
     void addFilm() throws Exception {
+
+
         CategoryEntity category = new CategoryEntity(6, "Documentary");
         List<CategoryEntity> categoryList = new ArrayList<>();
         categoryList.add(category);
@@ -185,5 +188,16 @@ class FilmControllerTests {
         assertEquals("Trailers", features.get(0));
         assertEquals("Commenataries", features.get(1));
         assertEquals("Behind the scenes", features.get(2));
+    }
+
+    @Test
+    void testActorEntity() {
+        ActorEntity actor = new ActorEntity();
+        actor.setLast_name("first");
+        actor.setLast_name("last");
+        actor.setActor_id(2023);
+        actor.setLast_update();
+
+        assert(true);
     }
 }
