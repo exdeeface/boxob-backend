@@ -41,24 +41,29 @@ public class FilmController {
     @PutMapping("/films/update/{film_id}")
     public @ResponseBody void updateById(@RequestBody FilmEntity film) {
         FilmEntity original = filmRepo.findById(film.getFilmId()).orElse(null);
-        assert original != null;
-        original.setTitle(film.getTitle());
-        original.setDescription(film.getDescription());
-        original.setLength(film.getLength());
-        original.setRelease_year(film.getRelease_year());
-        original.setRating(film.getRating());
-        original.setLanguage_id(film.getLanguageId());
-        film.setLast_update();
-        filmRepo.save(original);
-        FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
-        FilmCategoryId filmCategoryId = new FilmCategoryId();
-        filmCategoryId.setFilm_id(film.getFilmId());
-        filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
-        filmCategoryEntity.setFilmCategoryId(filmCategoryId);
-        filmCategoryEntity.setLastUpdate();
-        FilmCategoryEntity deleteMe = filmCategoryRepo.findByFilmId(film.getFilmId());
-        filmCategoryRepo.delete(deleteMe);
-        filmCategoryRepo.save(filmCategoryEntity);
+        if (original != null) {
+            original.setTitle(film.getTitle());
+            original.setDescription(film.getDescription());
+            original.setLength(film.getLength());
+            original.setRelease_year(film.getRelease_year());
+            original.setRating(film.getRating());
+            original.setLanguage_id(film.getLanguageId());
+
+            film.setLast_update();
+            filmRepo.save(original);
+
+            FilmCategoryId filmCategoryId = new FilmCategoryId();
+            filmCategoryId.setFilm_id(film.getFilmId());
+            filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
+
+            FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
+            filmCategoryEntity.setFilmCategoryId(filmCategoryId);
+            filmCategoryEntity.setLastUpdate();
+            FilmCategoryEntity deleteMe = filmCategoryRepo.findByFilmId(film.getFilmId());
+
+            filmCategoryRepo.delete(deleteMe);
+            filmCategoryRepo.save(filmCategoryEntity);
+        }
     }
 
     @PostMapping("/films/add")

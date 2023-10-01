@@ -9,6 +9,7 @@ import com.grae.boxobbackend.entity.FilmCategoryEntity;
 import com.grae.boxobbackend.entity.FilmEntity;
 import com.grae.boxobbackend.repo.FilmCategoryRepo;
 import com.grae.boxobbackend.repo.FilmRepo;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,7 +63,9 @@ class FilmControllerTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        FilmCategoryId filmCategoryId = new FilmCategoryId(1, 6);
+        FilmCategoryId filmCategoryId = new FilmCategoryId();
+        filmCategoryId.setFilm_id(film.getFilmId());
+        filmCategoryId.setCategory_id(film.getCategories().get(0).getCategory_id());
         FilmCategoryEntity filmCategory = new FilmCategoryEntity();
         filmCategory.setFilmCategoryId(filmCategoryId);
 
@@ -84,8 +87,12 @@ class FilmControllerTests {
         FilmEntity filmOriginal = new FilmEntity(1, "title", "description", 120, 2006,"PG", 1);
         filmOriginal.setCategories(categoryListOriginal);
 
+        FilmCategoryId filmCategoryIdOriginal = new FilmCategoryId();
+        filmCategoryIdOriginal.setFilm_id(filmOriginal.getFilmId());
+        filmCategoryIdOriginal.setCategory_id(categoryOriginal.getCategory_id());
+
         FilmCategoryEntity filmCategoryOriginal = new FilmCategoryEntity();
-        filmCategoryOriginal.setFilmCategoryId(new FilmCategoryId(1, 6));
+        filmCategoryOriginal.setFilmCategoryId(filmCategoryIdOriginal);
 
         CategoryEntity categoryNew = new CategoryEntity(11, "Horror");
         List<CategoryEntity> categoryListNew = new ArrayList<>();
@@ -94,8 +101,12 @@ class FilmControllerTests {
         FilmEntity filmNew = new FilmEntity(1, " new title", "new description", 90, 2008,"NC-17", 3);
         filmNew.setCategories(categoryListNew);
 
+        FilmCategoryId filmCategoryIdNew = new FilmCategoryId();
+        filmCategoryIdNew.setFilm_id(filmOriginal.getFilmId());
+        filmCategoryIdNew.setCategory_id(categoryNew.getCategory_id());
+
         FilmCategoryEntity filmCategoryNew = new FilmCategoryEntity();
-        filmCategoryNew.setFilmCategoryId(new FilmCategoryId(1,11));
+        filmCategoryNew.setFilmCategoryId(filmCategoryIdNew);
 
         when(filmRepo.save(filmOriginal)).thenReturn(filmNew);
 
@@ -112,6 +123,33 @@ class FilmControllerTests {
                         .content(asJsonString(filmCategoryOriginal))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateFilmFail() throws Exception {
+        CategoryEntity categoryOriginal = new CategoryEntity(6, "Documentary");
+        List<CategoryEntity> categoryListOriginal = new ArrayList<>();
+        categoryListOriginal.add(categoryOriginal);
+
+        FilmEntity film = new FilmEntity(2000, "title", "description", 120, 2006,"PG", 1);
+        film.setCategories(categoryListOriginal);
+
+        FilmCategoryId filmCategoryId = new FilmCategoryId();
+        filmCategoryId.setFilm_id(film.getFilmId());
+        filmCategoryId.setCategory_id(categoryOriginal.getCategory_id());
+
+        FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
+        filmCategoryEntity.setFilmCategoryId(filmCategoryId);
+
+        when(filmRepo.findById(film.getFilmId())).thenReturn(null);
+
+        assertThrows(ServletException.class, ()->{
+            mvc.perform(put("/films/update/2000")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(film))
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().is(200));
+        });
     }
 
     @Test
