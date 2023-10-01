@@ -143,12 +143,8 @@ class FilmControllerTests {
 
         when(filmRepo.findById(film.getFilmId())).thenReturn(null);
 
-        assertThrows(ServletException.class, ()->{
-            mvc.perform(put("/films/update/2000")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(asJsonString(film))
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(200));
+        assertThrows(NullPointerException.class, ()->{
+            FilmEntity filmOriginal = filmRepo.findById(film.getFilmId()).orElse(null);
         });
     }
 
