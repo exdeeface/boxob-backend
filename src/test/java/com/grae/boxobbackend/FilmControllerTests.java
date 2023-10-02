@@ -178,15 +178,4 @@ class FilmControllerTests {
         assertEquals("Commenataries", features.get(1));
         assertEquals("Behind the scenes", features.get(2));
     }
-
-    @Test
-    void testActorEntity() {
-        ActorEntity actor = new ActorEntity();
-        actor.setFirst_name("first");
-        actor.setLast_name("last");
-        actor.setActor_id(2023);
-        actor.setLast_update();
-
-        assert(true);
-    }
 }

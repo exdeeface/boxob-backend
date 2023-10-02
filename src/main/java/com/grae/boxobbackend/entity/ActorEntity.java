@@ -1,11 +1,7 @@
 package com.grae.boxobbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
