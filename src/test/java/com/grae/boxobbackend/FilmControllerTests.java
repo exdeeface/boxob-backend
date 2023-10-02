@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -110,7 +111,7 @@ class FilmControllerTests {
 
         FilmCategoryEntity filmCategoryNew = new FilmCategoryEntity();
         filmCategoryNew.setFilmCategoryId(filmCategoryIdNew);
-
+        when(filmRepo.findById(filmNew.getFilmId())).thenReturn(Optional.of(filmOriginal));
         when(filmRepo.save(filmOriginal)).thenReturn(filmNew);
 
         mvc.perform(put("/films/update/1")
