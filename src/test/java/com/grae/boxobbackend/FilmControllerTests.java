@@ -131,24 +131,12 @@ class FilmControllerTests {
 
     @Test
     void updateFilmFail() throws Exception {
-        CategoryEntity categoryOriginal = new CategoryEntity(6, "Documentary");
-        List<CategoryEntity> categoryListOriginal = new ArrayList<>();
-        categoryListOriginal.add(categoryOriginal);
+        Integer filmId = 2000;
 
-        FilmEntity film = new FilmEntity(2000, "title", "description", 120, 2006,"PG", 1);
-        film.setCategories(categoryListOriginal);
-
-        FilmCategoryId filmCategoryId = new FilmCategoryId();
-        filmCategoryId.setFilm_id(film.getFilmId());
-        filmCategoryId.setCategory_id(categoryOriginal.getCategory_id());
-
-        FilmCategoryEntity filmCategoryEntity = new FilmCategoryEntity();
-        filmCategoryEntity.setFilmCategoryId(filmCategoryId);
-
-        when(filmRepo.findById(film.getFilmId())).thenReturn(null);
+        when(filmRepo.findById(filmId)).thenReturn(null);
 
         assertThrows(NullPointerException.class, ()->{
-            FilmEntity filmOriginal = filmRepo.findById(film.getFilmId()).orElse(null);
+            FilmEntity film = filmRepo.findById(filmId).orElse(null);
         });
     }
 
